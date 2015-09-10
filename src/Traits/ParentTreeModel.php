@@ -41,6 +41,18 @@ trait ParentTreeModel {
     }
 
     /**
+     * Returns a hasOne relation of parent for 
+     * $this model id. 
+     * 
+     * @param \Illuminate\Database\Query\Builder $query
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function parent() {
+        //return $this->where($this->parentField, $this->getAttribute($this->primaryKey))->get();
+        return $this->belongsTo(static::class, $this->parentField, $this->primaryKey);
+    }
+
+    /**
      * Returns a hasMany relation of direct children of 
      * $this model id. 
      * 
