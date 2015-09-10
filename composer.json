@@ -1,0 +1,25 @@
+{
+    "name": "winponta/treevel",
+    "description": "Set of classes and traits to handle tree hierarchy in Laravel Eloquent Models",
+    "authors": [
+        {
+            "name": "Ademir Mazer Jr",
+            "email": "ademir.mazer.jr@gmail.com"
+        }
+    ],
+    "extra": {
+        "branch-alias": {
+            "dev-master": "dev-master"
+        }
+    },
+    "require": {
+        "php": ">=5.4.0",
+        "laravel/framework": "5.1.*"
+    },
+    "autoload": {        
+        "psr-4": {
+            "Winponta\\Treevel\\": "src/"
+        }
+    },
+    "minimum-stability": "dist"
+}
