@@ -11,7 +11,9 @@ namespace Winponta\Treevel\Traits;
 trait ParentTreeModel {
 
     protected $parentField = 'parent_id';
-
+    
+    protected $levelField = 'node_level';
+    
     /**
      * @link http://www.archybold.com/blog/post/booting-eloquent-model-traits Based on post blog of Archybold.com
      */
@@ -20,9 +22,44 @@ trait ParentTreeModel {
         self::creating(function ($model) {
             return $model->creatingHandler($model);
         });
+
+        self::saving(function ($model) {
+            return $model->savingHandler($model);
+        });
+        
+        self::updating(function ($model) {
+            return $model->updatingHandler($model);
+        });
+    }
+    
+    protected function calculateLevelField() {
+        if ($this->getAttribute($this->parentField) == null) {
+            $this->attributes[$this->levelField] = 0;
+        } else {
+            $auxModel = $this;
+            $l = 0;
+            while ($auxModel->parent()->count() > 0) {
+                $l++;
+                $auxModel = $auxModel->parent;
+            }
+            $this->attributes[$this->levelField] = $l;
+        }
     }
 
-    public function creatingHandler($model) {
+    public function updateLevel() {
+        $this->calculateLevelField($this);
+        $this->save();
+    }
+    
+    protected function creatingHandler($model) {
+        return $this->savingHandler($model);
+    }
+    
+    protected function updatingHandler($model) {
+        return $this->savingHandler($model);
+    }
+    
+    protected function savingHandler($model) {
         if ($model->getAttribute($this->parentField)) {
             //$p = self::find(new \MongoId($model->getAttribute($this->parentField)));
             $p = self::find($model->getAttribute($this->parentField));
@@ -35,8 +72,8 @@ trait ParentTreeModel {
             $model->attributes[$this->parentField] = null;
         }
 
+        $model->calculateLevelField();
 
-        //dd($this);
         return true;
     }
 
@@ -68,7 +105,7 @@ trait ParentTreeModel {
      * Returns a collection of direct children of 
      * $this model id. 
      * 
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getChildren() {
         return self::where($this->parentField, $this->getAttribute($this->primaryKey))->get();
@@ -155,6 +192,11 @@ trait ParentTreeModel {
         return $roots;
     }
 
+    /**
+     * Returns the full tree from database as a nested array
+     * 
+     * @return array
+     */
     public static function getTreeArray() {
         $col = self::getTree();
 
