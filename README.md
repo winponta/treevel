@@ -8,7 +8,7 @@
 
 2. Run copmposer:
 
-    composer update
+    `composer update`
 
 
 ## Using
@@ -30,7 +30,7 @@ Parent tree models are handled using `parent id` references.
 
 ##### Parent id references
 
-The default field name used by the package to handle the reference to parent record is named `parent_id`, you can change this value customizing the database field name your table/collection is using. Do this by overwriting the `$parentField` propertie:
+The default field value used by the package to handle the reference to parent record is named `parent_id`, you can change this value customizing the database field name your table/collection is using. Do this by overwriting the `$parentField` propertie:
 
     <?php
         ...
@@ -39,4 +39,13 @@ The default field name used by the package to handle the reference to parent rec
 
             protected $parentField = 'my_father_id';
 
-    
+##### Node level propertie
+
+This propertie controls the deep level of the node on the tree. The default field value used to handle this feature is named `node_level`, you can change this value customizing the database field name your table/collection is using. Do this by overwriting the `$levelField` propertie:
+
+    <?php
+        ...
+        class MyModel extends Eloquent {
+            use \Winponta\Treevel\Traits\ParentTreeModel;
+
+            protected $levelField = 'level';
