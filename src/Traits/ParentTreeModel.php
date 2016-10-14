@@ -10,6 +10,8 @@ namespace Winponta\Treevel\Traits;
  */
 trait ParentTreeModel {
 
+    protected $parentIdField = null;
+
     protected $parentField = 'parent_id';
     
     protected $levelField = 'node_level';
@@ -61,8 +63,13 @@ trait ParentTreeModel {
     
     protected function savingHandler($model) {
         if ($model->getAttribute($this->parentField)) {
-            //$p = self::find(new \MongoId($model->getAttribute($this->parentField)));
-            $p = self::find($model->getAttribute($this->parentField));
+			// If is set the name of the parent register that contains the value of identification
+			// then use it over primaryKey
+            if ($this->parentIdField) {
+                $p = self::where($this->parentIdField, $model->getAttribute($this->parentField))->first();
+            } else {
+                $p = self::find($model->getAttribute($this->parentField));				
+			}
 
             if ($p == null) {
                 throw new \Exception('No register found with the id ' . $model->getAttribute($this->parentField));
@@ -77,6 +84,10 @@ trait ParentTreeModel {
         return true;
     }
 
+	protected function getParentIdField() {
+		return (is_null($this->parentIdField)) ? $this->primaryKey : $this->parentIdField;
+	}
+
     /**
      * Returns a hasOne relation of parent for 
      * $this model id. 
@@ -86,7 +97,7 @@ trait ParentTreeModel {
      */
     public function parent() {
         //return $this->where($this->parentField, $this->getAttribute($this->primaryKey))->get();
-        return $this->belongsTo(static::class, $this->parentField, $this->primaryKey);
+        return $this->belongsTo(static::class, $this->parentField, $this->getParentIdField());
     }
 
     /**
@@ -98,7 +109,7 @@ trait ParentTreeModel {
      */
     public function children() {
         //return $this->where($this->parentField, $this->getAttribute($this->primaryKey))->get();
-        return $this->hasMany(static::class, $this->parentField, $this->primaryKey);
+        return $this->hasMany(static::class, $this->parentField, $this->getParentIdField());
     }
 
     /**
@@ -108,7 +119,7 @@ trait ParentTreeModel {
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getChildren() {
-        return self::where($this->parentField, $this->getAttribute($this->primaryKey))->get();
+        return self::where($this->parentField, $this->getAttribute($this->getParentIdField()))->get();
     }
 
     /**
