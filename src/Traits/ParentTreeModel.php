@@ -65,7 +65,7 @@ trait ParentTreeModel {
             $p = self::find($model->getAttribute($this->parentField));
 
             if ($p == null) {
-                throw new Exception('No register found with the id ' . $model->getAttribute($this->parentField));
+                throw new \Exception('No register found with the id ' . $model->getAttribute($this->parentField));
                 return false;
             }
         } else {
