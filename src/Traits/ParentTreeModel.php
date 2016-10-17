@@ -21,7 +21,11 @@ trait ParentTreeModel {
      */
     public static function bootParentTreeModel() {
         // register events
-        self::creating(function ($model) {
+        self::booting(function ($model) {
+            return $model->setFieldsNames();
+        });
+	    
+    	self::creating(function ($model) {
             return $model->creatingHandler($model);
         });
 
@@ -34,6 +38,9 @@ trait ParentTreeModel {
         });
     }
     
+    protected function setFieldsNames() {
+    }
+	
     protected function calculateLevelField() {
         if ($this->getAttribute($this->parentField) == null) {
             $this->attributes[$this->levelField] = 0;
