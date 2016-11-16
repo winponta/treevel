@@ -2,7 +2,7 @@
 
 ## Installation
 
-1. Require this package in your composer.json and run composer update (or run `composer require winponta/treevel` directly):
+1. Require this package in your composer.json file and run composer install (or run `composer require winponta/treevel` directly):
 
     "winponta/treevel": "0.*"
 
