@@ -41,13 +41,15 @@ The default field name used by the package to handle the reference value to the 
                 $this->setParentField( 'my_father_id' );
             }
 
-##### Node level propertie
+##### Node level property
 
-This propertie controls the deep level of the node on the tree. The default field value used to handle this feature is named `node_level`, you can change this value customizing the database field name your table/collection is using. Do this by overwriting the `$levelField` propertie:
+This property controls the deep level of the node on the tree. The default field value used to handle this feature is named `node_level`, you can change this value customizing the database field name your table/collection is using. Do this by setting the property calling the `setLevelField` method in the model `__constructot`:
 
     <?php
         ...
         class MyModel extends Eloquent {
             use \Winponta\Treevel\Traits\ParentTreeModel;
 
-            protected $levelField = 'level';
+            public function __construct() {
+                $this->setLevelField( 'depth' );
+            }
