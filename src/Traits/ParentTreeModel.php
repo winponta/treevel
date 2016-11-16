@@ -20,11 +20,6 @@ trait ParentTreeModel {
      * @link http://www.archybold.com/blog/post/booting-eloquent-model-traits Based on post blog of Archybold.com
      */
     public static function bootParentTreeModel() {
-        // register events
-        self::booting(function ($model) {
-            return $model->setFieldsNames();
-        });
-	    
     	self::creating(function ($model) {
             return $model->creatingHandler($model);
         });
@@ -38,7 +33,16 @@ trait ParentTreeModel {
         });
     }
     
-    protected function setFieldsNames() {
+    protected function setParentIdField($name) {
+        $this->parentIdField = $name;
+    }
+    
+    protected function setParentField($name) {
+        $this->parentField = $name;
+    }
+	
+    protected function setLevelField($name) {
+        $this->levelField = $name;
     }
 	
     protected function calculateLevelField() {
