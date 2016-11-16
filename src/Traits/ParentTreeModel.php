@@ -10,10 +10,23 @@ namespace Winponta\Treevel\Traits;
  */
 trait ParentTreeModel {
 
+    /**
+    * The name of the id field at parent table/collection.
+    * If it's null then Eloquent PrimaryKey property is used on code
+    * @var string
+    */
     protected $parentIdField = null;
 
+    /**
+    * The name of the field in the Model that holds the parent id value reference
+    * @var string
+    */
     protected $parentField = 'parent_id';
     
+    /**
+    * The name of the field in the Model that holds the level of the node
+    * @var string
+    */
     protected $levelField = 'node_level';
     
     /**
