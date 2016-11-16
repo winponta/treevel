@@ -30,14 +30,16 @@ Parent tree models are handled using `parent id` references.
 
 ##### Parent id references
 
-The default field value used by the package to handle the reference to parent record is named `parent_id`, you can change this value customizing the database field name your table/collection is using. Do this by overwriting the `$parentField` propertie:
+The default field name used by the package to handle the reference value to the parent record is named `parent_id`, you can change this value customizing the database field name your table/collection is using. Do this by setting the property calling the `setParentField` method in the model `__constructot`:
 
     <?php
         ...
         class MyModel extends Eloquent {
             use \Winponta\Treevel\Traits\ParentTreeModel;
 
-            protected $parentField = 'my_father_id';
+            public function __construct() {
+                $this->setParentField( 'my_father_id' );
+            }
 
 ##### Node level propertie
 
