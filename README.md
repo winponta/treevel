@@ -57,7 +57,7 @@ The default field name used by the package to handle the reference value to the 
 
 ##### Node level property  (levelField)
 
-This property controls the deep level of the node on the tree. The default field value used to handle this feature is named `node_level`, you can change this value customizing the database field name your table/collection is using. Do this by setting the property calling the `setLevelField` method in the model `__constructot`:
+This property controls the deep level of the node in the tree. The default field value used to handle this feature is named `node_level`, you can change this value customizing the database field name your table/collection is using. Do this by setting the property calling the `setLevelField` method in the model `__constructot`:
 
     <?php
         ...
