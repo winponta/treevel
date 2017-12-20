@@ -139,23 +139,40 @@ trait ParentTreeModel {
     /**
      * Returns a collection of direct children of 
      * $this model id. 
-     * 
+     *
+     * @param array $options An array with options to be appplied when recovering descendants
+     * <ul>
+     * <li>where => [key, value] - recover only descendants the key matches the value
+     * </ul>
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getChildren() {
-        return self::where($this->parentField, $this->getAttribute($this->getParentIdField()))->get();
+    public function getChildren($options = []) {
+        $children = self::where($this->parentField, $this->getAttribute($this->getParentIdField()))->get();
+
+        if (array_key_exists('where', $options)) {
+            $children = $children->where($options['where'][0], $options['where'][1]);
+        }
+
+        return $children;
+
     }
 
     /**
      * Returns a collection with all descendants of current Model
-     * 
+     *
+     * @param array $options An array with options to be appplied when recovering descendants
+     * <ul>
+     * <li>where => [key, value] - recover only descendants the key matches the value
+     * </ul>
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getDescendants() {
-        $children = $this->getChildren();
+    public function getDescendants($options = []) {
+        $children = $this->getChildren($options);
 
         foreach ($children as $item) {
-            $item->setAttribute('children', $item->getDescendants());
+            $item->setAttribute('children', $item->getDescendants($options));
         }
 
         return $children;
@@ -163,11 +180,16 @@ trait ParentTreeModel {
 
     /**
      * Returns true if the model has direct children, false if not
-     * 
+     *
+     * @param array $options An array with options to be appplied when recovering descendants
+     * <ul>
+     * <li>where => [key, value] - recover only descendants the key matches the value
+     * </ul>
+     *
      * @return boolean
      */
-    public function hasChildren() {
-        return self::getChildren()->count() > 0;
+    public function hasChildren($options = []) {
+        return self::getChildren($options)->count() > 0;
     }
 
     /**
@@ -205,7 +227,7 @@ trait ParentTreeModel {
 
     /**
      * Returns a collection with all the root nodes 
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public static function getRootNodes() {
@@ -214,14 +236,19 @@ trait ParentTreeModel {
 
     /**
      * Returns the full tree from database
-     * 
+     *
+     * @param array $options An array with options to be appplied when recovering descendants
+     * <ul>
+     * <li>where => [key, value] - recover only descendants the key matches the value
+     * </ul>
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public static function getTree() {
+    public static function getTree($options = []) {
         $roots = self::rootNodes()->get();
 
         foreach ($roots as $item) {
-            $item->setAttribute('children', $item->getDescendants());
+            $item->setAttribute('children', $item->getDescendants($options));
         }
 
         return $roots;
@@ -229,11 +256,16 @@ trait ParentTreeModel {
 
     /**
      * Returns the full tree from database as a nested array
-     * 
+     *
+     * @param array $options An array with options to be appplied when recovering descendants
+     * <ul>
+     * <li>where => [key, value] - recover only descendants the key matches the value
+     * </ul>
+     *
      * @return array
      */
-    public static function getTreeArray() {
-        $col = self::getTree();
+    public static function getTreeArray($options = []) {
+        $col = self::getTree($options);
 
         return self::treeToArray($col);
     }
