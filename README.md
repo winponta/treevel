@@ -67,3 +67,15 @@ This property controls the deep level of the node in the tree. The default field
             public function __construct() {
                 $this->setLevelField( 'depth' );
             }
+
+#### Retrieving the tree
+
+##### getTree
+
+ Returns the full tree from database as a Eloquent Collection
+
+* **$options** - An array with options to be appplied when recovering descendants
+
+>>>
+     * where => [key, value] - recover only descendants the key matches the value
+>>>
